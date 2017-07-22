@@ -89,7 +89,7 @@ export type Evaluator = (expr: string, context: any) => any;
 export const evalExpression = (evaluator: Evaluator, expr: string, context: any) =>
     evaluator(expr, context);
 
-/** Evaluate and binds an expression to the DOM. */
+/** Evaluate and binds an expression to the DOM. (This can be replaced by extenders) */
 export const bindExpression = (evaluator: Evaluator, elem: Element, expr: string, context: any) =>
     elem.innerHTML = evalExpression(evaluator, expr, context);
 

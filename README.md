@@ -28,9 +28,7 @@ const element = document.getElementById("template");
 
 const model = {
     description: "Whats up",
-    greet: (name: string) => {
-        return `Hello, ${name}!`;
-    },
+    greet: (name: string) => `Hello, ${name}!`,
     title: "Hey!",
 };
 
@@ -38,10 +36,10 @@ bindTemplate(element!, model);
 ```
 
 ## Features
-* The abillity to hook into the binding and evaluation steps with custom handlers. This enables the implementation of higher order features, such as data-binding. *(See "customBInder.ts")*
+* The abillity to hook into the binding and evaluation steps with custom handlers. This enables the implementation of higher order features, such as data-binding. *(See "customBinder.ts")*
 
 ## TODO
-* Write tests.
+* Write tests
 * Revise project structure
 
 ## Contributions

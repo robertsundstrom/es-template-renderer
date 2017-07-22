@@ -4,9 +4,7 @@ const element = document.getElementById("template");
 
 const model = {
     description: "Whats up",
-    greet: (name: string) => {
-        return `Hello, ${name}!`;
-    },
+    greet: (name: string) => `Hello, ${name}!`,
     title: "Hey!",
 };
 
