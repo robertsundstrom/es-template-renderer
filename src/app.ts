@@ -1,6 +1,6 @@
-import { bindTemplate } from "./templating";
+import { bindData } from "./templating";
 
-const element = document.getElementById("template");
+const element = document.getElementById("target");
 
 const model = {
     description: "Whats up",
@@ -8,6 +8,6 @@ const model = {
     title: "Hey!",
 };
 
-bindTemplate(element!, model);
+bindData(element!, model);
 
 model.title = "foo";

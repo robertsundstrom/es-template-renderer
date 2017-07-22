@@ -1,7 +1,7 @@
-String.prototype.matchAll = function(regexp: RegExp): string[][] | null {
+String.prototype.matchAll = function (regexp: RegExp): string[][] | null {
     const matches: any[] = [];
     // tslint:disable-next-line:only-arrow-functions
-    this.replace(regexp, function() {
+    this.replace(regexp, function () {
         const arr = ([]).slice.call(arguments, 0);
         const extras = arr.splice(-2);
         arr.index = extras[0];
@@ -107,7 +107,7 @@ export const bindExpression = (evaluator: Evaluator, elem: Element, expr: string
     elem.innerHTML = evalExpression(evaluator, expr, context);
 
 /** Default evaluator */
-const defaultEvaluator = (expr: string, context: any)  =>
+const defaultEvaluator = (expr: string, context: any) =>
     new Function("context", `with(context) { return ${expr}; }`)(context);
 
 /** Default binding handler */
@@ -115,6 +115,39 @@ const defaultBindingHandler = (target: Element, expr: string, context: any) => {
     bindExpression(defaultEvaluator, target, expr, context);
 };
 
-/** Bind a template to the DOM. */
-export const bindTemplate = (elem: Element, model: any, bindingHandler: BindingHandler = defaultBindingHandler) =>
-    bindExpressions(Array.from(getExpressions(elem)), model, bindingHandler);
+/** Bind a DOM element to some data using a binding handler. */
+export const bindData = (elem: Element, data: any, bindingHandler: BindingHandler = defaultBindingHandler) =>
+    bindExpressions(Array.from(getExpressions(elem)), data, bindingHandler);
+
+function cloneAttributes(element: Element, sourceNode: Node) {
+    // tslint:disable-next-line:prefer-const
+    let attr: Attr = null!;
+    const attributes = Array.prototype.slice.call(sourceNode.attributes);
+    // tslint:disable-next-line:no-conditional-assignment
+    while (attr = attributes.pop()) {
+        if (attr !== null) {
+            element.setAttribute(attr.nodeName, attr.nodeValue!);
+        }
+    }
+}
+
+/** Renders a template to the DOM and binds it to some data.  */
+export const renderTemplate = (
+    target: Element,
+    template: Element, data: any,
+    bindingHandler: BindingHandler = defaultBindingHandler) => {
+    const parent = target.parentElement!;
+    let templateRoot = null;
+    if (template instanceof HTMLTemplateElement) {
+        templateRoot = document.importNode(template.content, true);
+    } else {
+        templateRoot = template.children.item(0);
+    }
+    const templateInstance = templateRoot.cloneNode(true) as Element;
+    bindData(templateInstance, data);
+    if (templateInstance instanceof HTMLDivElement) {
+        // TODO: Copy the attributes of "target" over to "templateInstance".
+        cloneAttributes(templateInstance, target);
+    }
+    parent.replaceChild(templateInstance, target);
+};

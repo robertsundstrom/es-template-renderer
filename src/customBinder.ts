@@ -1,4 +1,4 @@
-import {  bindExpression, bindTemplate } from "./templating";
+import {  bindData, bindExpression } from "./templating";
 
 const cache: any = {};
 
@@ -20,4 +20,4 @@ const customBindingHandler = (elem: Element, expr: string, context: any) => {
     console.log("Handling expression:", expr);
 };
 
-export const myBinder = (elem: Element, data: any) => bindTemplate(elem!, data, customBindingHandler);
+export const myBinder = (elem: Element, data: any) => bindData(elem!, data, customBindingHandler);
