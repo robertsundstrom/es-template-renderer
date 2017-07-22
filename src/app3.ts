@@ -6,6 +6,10 @@ export class Foo extends Component {
     constructor(element: Element) {
         super(element);
     }
+
+    get name() {
+        return "Foo";
+    }
 }
 
 renderComponent(document.getElementById("foo")!, Foo);

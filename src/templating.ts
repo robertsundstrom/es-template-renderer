@@ -111,7 +111,7 @@ export const defaultEvaluator = (expr: string, context: any) =>
     new Function("context", `with(context) { return ${expr}; }`)(context);
 
 /** Default binding handler */
-const defaultBindingHandler = (target: Element, expr: string, context: any) => {
+export const defaultBindingHandler = (target: Element, expr: string, context: any) => {
     bindExpression(defaultEvaluator, target, expr, context);
 };
 

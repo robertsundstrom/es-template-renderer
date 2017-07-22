@@ -1,10 +1,10 @@
-import { renderTemplate } from "./templating";
+import { renderTemplate, defaultBindingHandler } from "./templating";
 
 export const loadTemplate = (url: string) => {
-    return fetch(url).then((x) => {
+    return fetch(url).then(async (response) => {
         const div = document.createElement("div");
-        div.innerHTML = x.body;
-        return div.childNodes.item(0) as Element;
+        div.innerHTML = await response.text();
+        return div.childNodes[0] as Element;
     });
 };
 
@@ -17,7 +17,9 @@ export class Component {
 
     public async attach() {
         const template = await loadTemplate(this.__proto__.constructor.template);
-        const ctx = renderTemplate(this.element, template, this);
+        const ctx = renderTemplate(this.element, template, this, (elem, expr, context) => {
+            defaultBindingHandler(elem, expr, context);
+        }));
     }
     public detach() {
         this.element.parentElement!.removeChild(this.element);

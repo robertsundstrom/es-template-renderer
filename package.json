@@ -4,6 +4,7 @@
   "description": "es-templating-engine",
   "main": "build/index.js",
   "scripts": {
+    "run": "http-server",
     "build": "tsc",
     "dev:watch": "tsc --watch",
     "lint": "tslint build/**/*.ts",
