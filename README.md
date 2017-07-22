@@ -36,7 +36,7 @@ const model = {
     title: "Hey!",
 };
 
-bindTemplate(element!, model);
+bindData(element!, model);
 ```
 
 That will render this:
