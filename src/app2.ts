@@ -10,5 +10,3 @@ const model = {
 };
 
 renderTemplate(target!, template!, model);
-
-model.title = "foo";

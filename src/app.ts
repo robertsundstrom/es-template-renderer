@@ -9,5 +9,3 @@ const model = {
 };
 
 bindData(elem!, model);
-
-model.title = "foo";
