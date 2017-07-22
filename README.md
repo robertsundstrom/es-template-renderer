@@ -7,6 +7,10 @@ This library is written in TypeScript, but should be able to target any version 
 
 This is **experimental** and not a finished product.
 
+## Features
+* The abillity to hook into the binding and evaluation steps with custom handlers. This enables the implementation of higher order features, such as data-binding. *(See "customBinder.ts")*
+
+
 ## Usage
 
 **index.html:**
@@ -35,7 +39,7 @@ const model = {
 bindTemplate(element!, model);
 ```
 
-This will render this:
+That will render this:
 
 ```html
 <div id="template">
@@ -45,8 +49,34 @@ This will render this:
 </div>
 ```
 
-## Features
-* The abillity to hook into the binding and evaluation steps with custom handlers. This enables the implementation of higher order features, such as data-binding. *(See "customBinder.ts")*
+## Extendibility
+
+Simple case extending the expression evaluator to cache the generated functions.
+
+```ts
+import {  bindExpression, bindTemplate } from "./templating";
+
+const cache: any = {};
+
+const customEvaluator = (expr: string, context: any)  => {
+    let f = null;
+    if (expr in cache) {
+        f = cache[expr];
+    } else {
+        f = new Function("context", `with(context) { return ${expr}; }`);
+        cache[expr] = f;
+    }
+    return f(context);
+};
+
+const customBindingHandler = (target: Element, expr: string, context: any) => {
+    bindExpression(customEvaluator, target, expr, context);
+    console.log("Handling expression:", expr);
+};
+
+export const myBinder = (elem: Element, data: any) => bindTemplate(elem!, data, customBindingHandler);
+
+```
 
 ## TODO
 * Write tests
