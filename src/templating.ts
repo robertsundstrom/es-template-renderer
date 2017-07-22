@@ -30,7 +30,7 @@ function* getExpressions(elem: Node): Iterable<IExpressionInfo> {
     }
 }
 
-interface IExpressionInfo {
+export interface IExpressionInfo {
     expr: any;
     node: Element;
 }

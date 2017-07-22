@@ -2,11 +2,11 @@
   "name": "es-templating-engine",
   "version": "1.0.0",
   "description": "es-templating-engine ==",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "build": "tsc",
     "dev:watch": "tsc --watch",
-    "lint": "tslint *.ts",
+    "lint": "tslint build/**/*.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
