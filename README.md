@@ -35,6 +35,16 @@ const model = {
 bindTemplate(element!, model);
 ```
 
+This will render this:
+
+```html
+<div id="template">
+    <h1><span>Hey!</span></h1>
+    <p><span>Whats up!</span></p>
+    <p><span>Hello, John Doe!</span></p>
+</div>
+```
+
 ## Features
 * The abillity to hook into the binding and evaluation steps with custom handlers. This enables the implementation of higher order features, such as data-binding. *(See "customBinder.ts")*
 
