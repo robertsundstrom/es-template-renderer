@@ -41,7 +41,8 @@ bindTemplate(element!, model);
 * The abillity to hook into the binding and evaluation steps with custom handlers. This enables the implementation of higher order features, such as data-binding. *(See "customBInder.ts")*
 
 ## TODO
-Write tests.
+* Write tests.
+* Revise project structure
 
 ## Contributions
 Feel free to come with contributions and/or suggestions!
