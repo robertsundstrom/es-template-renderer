@@ -31,7 +31,7 @@ export const detachComponent = (element: Element, component: any) => {
     }
 };
 
-export function renderComponent(element: Element, type: any) {
+export async  function renderComponent(element: Element, type: any) {
     const component = new type(element);
-    attachComponent(element, component);
+    await attachComponent(element, component);
 }
