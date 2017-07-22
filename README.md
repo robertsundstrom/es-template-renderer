@@ -21,7 +21,7 @@ This is **experimental** and not a finished product.
 
 **index.ts:**
 
-```js
+```ts
 import { bindTemplate } from "./templating";
 
 const element = document.getElementById("template");
