@@ -1,4 +1,4 @@
-import { renderTemplate } from "./templating";
+import { defaultEvaluator, renderTemplate } from "./templating";
 
 const template = document.getElementById("template");
 const target = document.getElementById("target");
@@ -9,4 +9,12 @@ const model = {
     title: "Hey!",
 };
 
-renderTemplate(target!, template!, model);
+const updateBinding = (elem: Element, expr: string, context: any) => {
+    elem.innerHTML = defaultEvaluator(expr, context);
+};
+
+const ctxt = renderTemplate(target!, template!, model);
+for (const { elem, expr, context } of ctxt.bindings) {
+    // Update binding
+    updateBinding(elem, expr, context.data);
+}

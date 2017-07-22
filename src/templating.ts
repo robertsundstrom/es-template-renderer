@@ -1,7 +1,7 @@
-String.prototype.matchAll = function (regexp: RegExp): string[][] | null {
+String.prototype.matchAll = function(regexp: RegExp): string[][] | null {
     const matches: any[] = [];
     // tslint:disable-next-line:only-arrow-functions
-    this.replace(regexp, function () {
+    this.replace(regexp, function() {
         const arr = ([]).slice.call(arguments, 0);
         const extras = arr.splice(-2);
         arr.index = extras[0];
@@ -49,9 +49,9 @@ function processNode(node: Node): IExpressionInfo[] {
                     for (const entry of match) {
                         const startOffset = node.nodeValue.indexOf(entry[0]);
                         const endOffset = startOffset + entry[0].length;
-                        const length = startOffset - i;
-                        if (length > 0) {
-                            const str = textString.substr(i, length);
+                        const length2 = startOffset - i;
+                        if (length2 > 0) {
+                            const str = textString.substr(i, length2);
                             const textNode = document.createTextNode(str);
                             parentNode.insertBefore(textNode, node);
                         }
@@ -107,7 +107,7 @@ export const bindExpression = (evaluator: Evaluator, elem: Element, expr: string
     elem.innerHTML = evalExpression(evaluator, expr, context);
 
 /** Default evaluator */
-const defaultEvaluator = (expr: string, context: any) =>
+export const defaultEvaluator = (expr: string, context: any) =>
     new Function("context", `with(context) { return ${expr}; }`)(context);
 
 /** Default binding handler */
@@ -131,22 +131,53 @@ function cloneAttributes(element: Element, sourceNode: Node) {
     }
 }
 
+export interface ITemplateContext {
+    template: Element;
+    target: Element;
+    data: any;
+    bindings: ITemplateBindings[];
+}
+
+export interface ITemplateBindings {
+    elem: Element;
+    expr: string;
+    context: ITemplateContext;
+}
+
 /** Renders a template to the DOM and binds it to some data.  */
 export const renderTemplate = (
     target: Element,
     template: Element, data: any,
     bindingHandler: BindingHandler = defaultBindingHandler) => {
+    const context: ITemplateContext = {
+        bindings: [],
+        data,
+        target,
+        template,
+    };
     const parent = target.parentElement!;
     let templateInstance: Element = null!;
+    templateInstance = target;
+    templateInstance.innerHTML = "";
     if (template instanceof HTMLTemplateElement) {
         const templateRoot = document.importNode(template.content, true);
-        templateInstance = document.createElement("div");
         templateInstance.appendChild(templateRoot);
     } else {
         const templateRoot = template.children.item(0).cloneNode(true);
+        templateInstance.appendChild(templateRoot);
     }
-    bindData(templateInstance, data);
+    const handlerWrapper = (elem: Element, expr: string, ctx: any) => {
+        context.bindings.push({
+            context,
+            elem,
+            expr,
+        });
+        bindingHandler(elem, expr, ctx);
+    };
+    const node = [];
+    bindData(templateInstance, data, handlerWrapper);
     // TODO: Copy the attributes of "target" over to "templateInstance".
     cloneAttributes(templateInstance, target);
     parent.replaceChild(templateInstance, target);
+    return context;
 };
