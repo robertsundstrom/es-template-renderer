@@ -69,8 +69,10 @@ const customEvaluator = (expr: string, context: any)  => {
     return f(context);
 };
 
-const customBindingHandler = (target: Element, expr: string, context: any) => {
-    bindExpression(customEvaluator, target, expr, context);
+const customBindingHandler = (elem: Element, expr: string, context: any) => {
+    bindExpression(customEvaluator, elem, expr, context);
+    // Shorthand for: elem.innerHTML = evalExpression(expr, context);
+
     console.log("Handling expression:", expr);
 };
 

@@ -30,7 +30,7 @@ function* getExpressions(elem: Node): Iterable<IExpressionInfo> {
     }
 }
 
-export interface IExpressionInfo {
+interface IExpressionInfo {
     expr: any;
     node: Element;
 }
@@ -82,6 +82,19 @@ function processNode(node: Node): IExpressionInfo[] {
     return [];
 }
 
+/** Hooks into the binding step */
+export type BindingHandler = (elem: Element, expr: string, context: any) => void;
+
+/*** Evaluate and bind expressions within a certain context. */
+const bindExpressions = (
+    expressions: IExpressionInfo[],
+    context: any, handler: BindingHandler) => {
+    for (const ei of expressions) {
+        const { expr, node } = ei;
+        handler(node, expr, context);
+    }
+};
+
 /** Evaluates an expression. (Used as a hook) */
 export type Evaluator = (expr: string, context: any) => any;
 
@@ -92,19 +105,6 @@ export const evalExpression = (evaluator: Evaluator, expr: string, context: any)
 /** Evaluate and binds an expression to the DOM. (This can be replaced by extenders) */
 export const bindExpression = (evaluator: Evaluator, elem: Element, expr: string, context: any) =>
     elem.innerHTML = evalExpression(evaluator, expr, context);
-
-/** Hooks into the binding step */
-export type BindingHandler = (elem: Element, expr: string, context: any) => void;
-
-/*** Evaluate and bind expressions within a certain context. */
-export const bindExpressions = (
-    expressions: IExpressionInfo[],
-    context: any, handler: BindingHandler) => {
-    for (const ei of expressions) {
-        const { expr, node } = ei;
-        handler(node, expr, context);
-    }
-};
 
 /** Default evaluator */
 const defaultEvaluator = (expr: string, context: any)  =>

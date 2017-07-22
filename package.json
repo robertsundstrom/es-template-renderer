@@ -1,7 +1,7 @@
 {
   "name": "es-templating-engine",
   "version": "1.0.0",
-  "description": "es-templating-engine ==",
+  "description": "es-templating-engine",
   "main": "build/index.js",
   "scripts": {
     "build": "tsc",
