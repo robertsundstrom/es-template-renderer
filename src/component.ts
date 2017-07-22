@@ -1,4 +1,4 @@
-import { renderTemplate, defaultBindingHandler } from "./templating";
+import { defaultBindingHandler, renderTemplate } from "./templating";
 
 export const loadTemplate = (url: string) => {
     return fetch(url).then(async (response) => {
@@ -6,6 +6,12 @@ export const loadTemplate = (url: string) => {
         div.innerHTML = await response.text();
         return div.childNodes[0] as Element;
     });
+};
+
+export const template = (path: string) => {
+    return (target: any) => {
+        target.template = path;
+    };
 };
 
 export class Component {
