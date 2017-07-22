@@ -1,16 +1,30 @@
-import { Component, renderComponent, template } from "./Component";
+import { renderComponent, template } from "./Component";
 
 @template("./Foo.html")
-export class Foo extends Component {
+export class Foo {
     // public static template: string = "./Foo.html";
 
+    private element: Element;
+
     constructor(element: Element) {
-        super(element);
+        this.element = element;
     }
 
     get name() {
         return "Foo";
     }
+
+    public attach() {
+        console.log("Component attached.");
+    }
+
+    public detach() {
+        console.log("Component detached.");
+    }
 }
 
-renderComponent(document.getElementById("foo")!, Foo);
+const fooComponents = document.getElementsByTagName("Foo");
+
+for (const componentNode of Array.from(fooComponents)) {
+    renderComponent(componentNode, Foo);
+}

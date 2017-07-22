@@ -14,25 +14,24 @@ export const template = (path: string) => {
     };
 };
 
-export class Component {
-    public element: Element;
-
-    constructor(element: Element) {
-        this.element = element;
+export const attachComponent = async (element: Element, component: any) => {
+    const temp = await loadTemplate(component.constructor.template);
+    const ctx = renderTemplate(element, temp, component, (elem2, expr, context) => {
+        defaultBindingHandler(elem2, expr, context);
+    });
+    if ("attach" in component) {
+        component.attach();
     }
+};
 
-    public async attach() {
-        const template = await loadTemplate(this.__proto__.constructor.template);
-        const ctx = renderTemplate(this.element, template, this, (elem, expr, context) => {
-            defaultBindingHandler(elem, expr, context);
-        }));
+export const detachComponent = (element: Element, component: any) => {
+    element.parentElement!.removeChild(element);
+    if ("detach" in component) {
+        component.detach();
     }
-    public detach() {
-        this.element.parentElement!.removeChild(this.element);
-    }
-}
+};
 
-export function renderComponent(element: Element, type: typeof Component) {
+export function renderComponent(element: Element, type: any) {
     const component = new type(element);
-    component.attach();
+    attachComponent(element, component);
 }
