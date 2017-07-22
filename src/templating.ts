@@ -137,17 +137,16 @@ export const renderTemplate = (
     template: Element, data: any,
     bindingHandler: BindingHandler = defaultBindingHandler) => {
     const parent = target.parentElement!;
-    let templateRoot = null;
+    let templateInstance: Element = null!;
     if (template instanceof HTMLTemplateElement) {
-        templateRoot = document.importNode(template.content, true);
+        const templateRoot = document.importNode(template.content, true);
+        templateInstance = document.createElement("div");
+        templateInstance.appendChild(templateRoot);
     } else {
-        templateRoot = template.children.item(0);
+        const templateRoot = template.children.item(0).cloneNode(true);
     }
-    const templateInstance = templateRoot.cloneNode(true) as Element;
     bindData(templateInstance, data);
-    if (templateInstance instanceof HTMLDivElement) {
-        // TODO: Copy the attributes of "target" over to "templateInstance".
-        cloneAttributes(templateInstance, target);
-    }
+    // TODO: Copy the attributes of "target" over to "templateInstance".
+    cloneAttributes(templateInstance, target);
     parent.replaceChild(templateInstance, target);
 };

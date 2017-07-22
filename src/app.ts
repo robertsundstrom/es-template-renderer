@@ -1,6 +1,6 @@
 import { bindData } from "./templating";
 
-const element = document.getElementById("target");
+const elem = document.getElementById("target");
 
 const model = {
     description: "Whats up",
@@ -8,6 +8,6 @@ const model = {
     title: "Hey!",
 };
 
-bindData(element!, model);
+bindData(elem!, model);
 
 model.title = "foo";
