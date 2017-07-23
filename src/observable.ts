@@ -97,7 +97,7 @@ export class Computed<T> extends EventEmitter implements IObservable<T> {
 
     public dispose() {
         for (const depedendency of this.dependencies) {
-            depedendency.removeListener("change", this.dependencyChangedHandler);
+            depedendency.removeEventListener("change", this.dependencyChangedHandler);
         }
     }
 
@@ -107,7 +107,7 @@ export class Computed<T> extends EventEmitter implements IObservable<T> {
             this.update();
         });
         for (const depedendency of this.dependencies) {
-            depedendency.addListener("change", this.dependencyChangedHandler.bind(this));
+            depedendency.addEventListener("change", this.dependencyChangedHandler.bind(this));
         }
     }
 
