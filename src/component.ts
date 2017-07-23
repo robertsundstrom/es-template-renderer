@@ -52,7 +52,7 @@ export const attachComponent = async (element: Element, component: any) => {
             if (results && results.length > 1) {
                 const expr = results[1];
 
-                input.addEventListener("change", (ev) => {
+                input.addEventListener("input", (ev) => {
                     ctx.data[attr.value] = input.value;
                 });
 
