@@ -14,6 +14,14 @@ export const template = (path: string) => {
     };
 };
 
+const components: any = {};
+
+export const component = () => {
+    return (target: any) => {
+        components[target.name.toLowerCase()] = target;
+    };
+};
+
 export const attachComponent = async (element: Element, component: any) => {
     const temp = await loadTemplate(component.constructor.template);
     const ctx = renderTemplate(element, temp, component, (elem2, expr, context) => {
@@ -31,7 +39,10 @@ export const detachComponent = (element: Element, component: any) => {
     }
 };
 
-export async  function renderComponent(element: Element, type: any) {
+export async function renderComponent(element: Element, type?: any) {
+    if (typeof type === "undefined") {
+        type = components[element.localName!];
+    }
     const component = new type(element);
     await attachComponent(element, component);
 }
