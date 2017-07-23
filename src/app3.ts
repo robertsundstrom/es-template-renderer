@@ -5,6 +5,8 @@ import { component, renderComponent, template } from "./Component";
 export class Foo {
     // public static template: string = "./Foo.html";
 
+    private static times = 0;
+
     public firstName: string;
     public lastName: string;
 
@@ -21,12 +23,17 @@ export class Foo {
         return `${this.firstName} ${this.lastName}`;
     }
 
+    public test(ev: Event) {
+        console.log(ev);
+        this.lastName = "Boo";
+    }
+
     public attach() {
         console.log("Component attached.");
 
         setTimeout(() => {
-            this.firstName = "000";
-        }, 3000);
+            this.firstName = `Component #${++Foo.times}`;
+        }, 2000);
     }
 
     public detach() {
