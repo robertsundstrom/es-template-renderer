@@ -1,4 +1,4 @@
-import { component, renderComponent, template } from "./Component";
+import { component, renderComponent, template, components } from "./Component";
 
 @component()
 @template("./Foo.html")
@@ -41,8 +41,22 @@ export class Foo {
     }
 }
 
-const fooComponents = document.getElementsByTagName("Foo");
+const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+        console.log(mutation);
+        for (const node of Array.from(mutation.addedNodes)) {
+            // console.log(node);
+            if (node.localName && node.localName in components) {
+                console.log(node.localName);
+                renderComponent(node as any);
+            }
+        }
+    }
+    return true;
+});
+observer.observe(document, {
+    childList: true, // report added/removed nodes
+    subtree: true,   // observe any descendant elements
+});
 
-for (const componentNode of Array.from(fooComponents)) {
-    renderComponent(componentNode);
-}
+document.body.appendChild(document.createElement("foo"));

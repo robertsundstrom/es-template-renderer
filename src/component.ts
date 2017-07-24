@@ -15,7 +15,7 @@ export const template = (path: string) => {
     };
 };
 
-const components: any = {};
+export const components: any = {};
 
 export const component = () => {
     return (target: any) => {
@@ -81,6 +81,13 @@ export const attachComponent = async (element: Element, component: any) => {
     if ("attach" in component) {
         component.attach();
     }
+    /*
+    element.addEventListener("unload", () => {
+        if ("detach" in component) {
+            component.detach();
+        }
+    });
+    */
 };
 
 export const detachComponent = (element: Element, component: any) => {
@@ -94,6 +101,6 @@ export async function renderComponent(element: Element, type?: any) {
     if (typeof type === "undefined") {
         type = components[element.localName!];
     }
-    let component = new type(type);
+    const component = new type(type);
     await attachComponent(element, component);
 }
