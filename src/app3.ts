@@ -1,62 +1,54 @@
-import { component, renderComponent, template, components } from "./Component";
+import { attribute, customElement, renderView, template } from "./Component";
 
-@component()
+@customElement("foo-element")
 @template("./Foo.html")
-export class Foo {
+export class Foo extends HTMLElement {
     // public static template: string = "./Foo.html";
+
+    static get observedAttributes() {return ["firstname", "lastname"]; }
 
     private static times = 0;
 
-    public firstName: string;
-    public lastName: string;
+    public firstname: string;
+    public lastname: string;
 
-    private element: Element;
+    constructor() {
+        super();
 
-    constructor(element: Element) {
-        this.element = element;
+        this.firstname = "Foo";
+        this.lastname = "Bar";
 
-        this.firstName = "Foo";
-        this.lastName = "Bar";
+        renderView(this);
     }
 
     public get fullName() {
-        return `${this.firstName} ${this.lastName}`;
+        return `${this.firstname} ${this.lastname}`;
     }
 
     public test(ev: Event) {
         console.log(ev);
-        this.lastName = "Boo";
+        this.lastname = "Boo";
     }
 
-    public attach() {
-        console.log("Component attached.");
-
-        setTimeout(() => {
-            this.firstName = `Component #${++Foo.times}`;
-        }, 2000);
+    private connectedCallback() {
+        console.log("Connected");
     }
 
-    public detach() {
-        console.log("Component detached.");
+    private disconnectedCallback() {
+        console.log("Disconnected");
+    }
+
+    private attributeChangedCallback (attr: any, oldValue: any, newValue: any) {
+        this[attr] = newValue;
+        /*
+        this.__props_[attr].on("change", (newValue: any) => {
+            let attr = this.attributes.getNamedItem(attr);
+            attr.value = newValue;
+        });
+        */
+        if ("onAttributeChanged" in this) {
+            this.onAttributeChanged(attr, oldValue, newValue);
+        }
     }
 }
 
-const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-        console.log(mutation);
-        for (const node of Array.from(mutation.addedNodes)) {
-            // console.log(node);
-            if (node.localName && node.localName in components) {
-                console.log(node.localName);
-                renderComponent(node as any);
-            }
-        }
-    }
-    return true;
-});
-observer.observe(document, {
-    childList: true, // report added/removed nodes
-    subtree: true,   // observe any descendant elements
-});
-
-document.body.appendChild(document.createElement("foo"));

@@ -15,14 +15,6 @@ export const template = (path: string) => {
     };
 };
 
-export const components: any = {};
-
-export const component = () => {
-    return (target: any) => {
-        components[target.name.toLowerCase()] = target;
-    };
-};
-
 const javaScriptAssignmentTarget2 = /^([_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*)$/;
 
 const createComputed = (expr: string, context: any) =>
@@ -30,7 +22,12 @@ const createComputed = (expr: string, context: any) =>
         new Function("context", `with(context) { return ${expr}; }`)
             .bind(context, context));
 
-export const attachComponent = async (element: Element, component: any) => {
+export const renderView = async (component: HTMLElement) => {
+    const shadow = component.attachShadow({mode: "open"});
+    const element2 = document.createElement("div");
+    const element = document.createElement("div");
+    element2.appendChild(element);
+
     const temp = await loadTemplate(component.constructor.template);
     component = track(component);
     const ctx = rt(element, temp, component, (elem2, expr, context) => {
@@ -48,7 +45,7 @@ export const attachComponent = async (element: Element, component: any) => {
         }
         const attrs = Array.from(input.attributes);
         for (const attr of attrs) {
-            const results = /@\(([^}]*)\)/g.exec(attr.localName!)!;
+            const results = /\(([^}]*)\)/g.exec(attr.localName!)!;
             if (results && results.length > 1) {
                 const expr = results[1];
 
@@ -69,7 +66,7 @@ export const attachComponent = async (element: Element, component: any) => {
     for (const button of Array.from(buttons)) {
         const attrs = Array.from(button.attributes);
         for (const attr of attrs) {
-            const results = /\(([^}]*)\)/g.exec(attr.localName!)!;
+            const results = /\$\(([^}]*)\)/g.exec(attr.localName!)!;
             if (results && results.length > 1) {
                 const eventName = results[1];
                 button.addEventListener(eventName, (ev) => {
@@ -78,29 +75,38 @@ export const attachComponent = async (element: Element, component: any) => {
             }
         }
     }
-    if ("attach" in component) {
-        component.attach();
-    }
-    /*
-    element.addEventListener("unload", () => {
-        if ("detach" in component) {
-            component.detach();
+
+    shadow.appendChild(element2);
+};
+
+export function customElement(name: string) {
+    return (target: any) => {
+        customElements.define(name, target);
+    };
+}
+
+export function attribute(name?: string) {
+    return (target: any, key: string, descriptor: PropertyDescriptor) => {
+        const constructor = target.constructor;
+        if (!("observedAttributes" in constructor)) {
+            constructor.observedAttributes = [];
         }
-    });
-    */
-};
+        let attr = "";
+        if (typeof name !== "undefined") {
+            attr = name;
+        } else {
+            attr = key;
+        }
+        constructor.observedAttributes.push(attr);
 
-export const detachComponent = (element: Element, component: any) => {
-    element.parentElement!.removeChild(element);
-    if ("detach" in component) {
-        component.detach();
-    }
-};
-
-export async function renderComponent(element: Element, type?: any) {
-    if (typeof type === "undefined") {
-        type = components[element.localName!];
-    }
-    const component = new type(type);
-    await attachComponent(element, component);
+        if (!("attributeChangedCallback" in target)) {
+            target.attributeChangedCallback = (attr: any, oldValue: any, newValue:
+                any) => {
+                if ("onAttributeChanged" in target) {
+                    target.onAttributeChanged(attr, oldValue, newValue);
+                }
+                target[key] = newValue;
+            };
+        }
+    };
 }
