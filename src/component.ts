@@ -1,5 +1,5 @@
 import { Computed, track } from "./observable";
-import { defaultBindingHandler, ITemplateContext, renderTemplate as rt } from "./templating";
+import { defaultBindingHandler, ITemplateContext, render as rt } from "./templating";
 
 export const loadTemplate = (url: string) => {
     return fetch(url).then(async (response) => {
@@ -22,7 +22,7 @@ const createComputed = (expr: string, context: any) =>
         new Function("context", `with(context) { return ${expr}; }`)
             .bind(context, context));
 
-export const renderView = async (component: HTMLElement) => {
+export const renderTemplate = async (component: HTMLElement) => {
     const shadow = component.attachShadow({mode: "open"});
     const element2 = document.createElement("div");
     const element = document.createElement("div");

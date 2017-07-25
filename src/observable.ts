@@ -1,5 +1,40 @@
 import EventEmitter from "./EventEmitter";
-import { defaultEvaluator, ITemplateContext, renderTemplate as rt } from "./templating";
+import { defaultEvaluator, ITemplateContext, render } from "./templating";
+
+const propsKey = "__props__";
+
+export function getProperty<T>(obj: any, name: string): undefined | undefined {
+    let props = obj[propsKey];
+    if (!props) {
+        props = obj[propsKey] = {};
+    }
+    if (name in props) {
+        return obj[name];
+    }
+    return undefined;
+}
+
+export function defineProperty<T>(obj: any, name: string, value?: T): Observable<T> {
+    let props = obj[propsKey];
+    if (!props) {
+        props = obj[propsKey] = {};
+    }
+    if (name in props) {
+        throw new Error(`The property "${name}" has already been defined.`);
+    }
+    const observable = new Observable<T>(value);
+    delete obj[name];
+    Object.defineProperty(obj, name, {
+        get: () => {
+            return props[name].get();
+        },
+        set: (v) => {
+            props[name].set(v);
+        },
+    });
+    props[name] = observable;
+    return observable;
+}
 
 export const evaluate = (expr: string, context: any) => {
     return defaultEvaluator(expr, context);
@@ -124,24 +159,12 @@ export class Computed<T> extends EventEmitter implements IObservable<T> {
 }
 
 export const track = (obj: any) => {
-    for (const prop in obj) {
-        if (prop) {
-            const value = obj[prop];
-            if (!("__props__" in obj)) {
-                obj.__props__ = {};
-            }
-            if (!(prop in obj.__props__)) {
-                const observable = new Observable(value);
-                obj.__props__[prop] = observable;
-                delete obj[prop];
-                Object.defineProperty(obj, prop, {
-                    get: () => {
-                        return obj.__props__[prop].get();
-                    },
-                    set: (v) => {
-                        obj.__props__[prop].set(v);
-                    },
-                });
+    for (const key in obj) {
+        if (key) {
+            const value = obj[key];
+            const prop = getProperty(obj, key);
+            if (!prop) {
+                defineProperty(obj, key, value);
             }
         }
     }

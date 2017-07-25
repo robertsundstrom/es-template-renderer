@@ -1,4 +1,4 @@
-import { bindData } from "./templating";
+import { process } from "./templating";
 
 const elem = document.getElementById("target");
 
@@ -8,4 +8,4 @@ const model = {
     title: "Hey!",
 };
 
-bindData(elem!, model);
+process(elem!, model);

@@ -1,4 +1,4 @@
-import { defaultEvaluator, renderTemplate } from "./templating";
+import { defaultEvaluator, render } from "./templating";
 
 const template = document.getElementById("template");
 const target = document.getElementById("target");
@@ -9,7 +9,7 @@ const model = {
     title: "Hey!",
 };
 
-const ctxt = renderTemplate(target!, template!, model);
+const ctxt = render(target!, template!, model);
 
 model.description = "Test";
 

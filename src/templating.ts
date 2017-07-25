@@ -116,7 +116,7 @@ export const defaultBindingHandler = (target: Element, expr: string, context: an
 };
 
 /** Bind a DOM element to some data using a binding handler. */
-export const bindData = (elem: Element, data: any, bindingHandler: BindingHandler = defaultBindingHandler) =>
+export const process = (elem: Element, data: any, bindingHandler: BindingHandler = defaultBindingHandler) =>
     bindExpressions(Array.from(getExpressions(elem)), data, bindingHandler);
 
 function cloneAttributes(element: Element, sourceNode: Node) {
@@ -145,7 +145,7 @@ export interface ITemplateBindings {
 }
 
 /** Renders a template to the DOM and binds it to some data.  */
-export const renderTemplate = (
+export const render = (
     target: Element,
     template: Element, data: any,
     bindingHandler: BindingHandler = defaultBindingHandler) => {
@@ -175,7 +175,7 @@ export const renderTemplate = (
         bindingHandler(elem, expr, ctx);
     };
     const node = [];
-    bindData(templateInstance, data, handlerWrapper);
+    process(templateInstance, data, handlerWrapper);
     // TODO: Copy the attributes of "target" over to "templateInstance".
     cloneAttributes(templateInstance, target);
     parent.replaceChild(templateInstance, target);

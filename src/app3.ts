@@ -1,4 +1,4 @@
-import { attribute, customElement, renderView, template } from "./Component";
+import { attribute, customElement, renderTemplate, template } from "./Component";
 
 @customElement("foo-element")
 @template("./Foo.html")
@@ -18,7 +18,7 @@ export class Foo extends HTMLElement {
         this.firstname = "Foo";
         this.lastname = "Bar";
 
-        renderView(this);
+        renderTemplate(this);
     }
 
     public get fullName() {
@@ -38,7 +38,7 @@ export class Foo extends HTMLElement {
         console.log("Disconnected");
     }
 
-    private attributeChangedCallback (attr: any, oldValue: any, newValue: any) {
+    private attributeChanged (attr: any, oldValue: any, newValue: any) {
         this[attr] = newValue;
         /*
         this.__props_[attr].on("change", (newValue: any) => {
