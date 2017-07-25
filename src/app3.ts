@@ -9,14 +9,14 @@ export class Foo extends HTMLElement {
 
     private static times = 0;
 
-    public firstname: string;
-    public lastname: string;
+    public firstname: string = "Foo";
+    public lastname: string = "Bar";
+    public counter: number = 0;
 
     constructor() {
         super();
 
-        this.firstname = "Foo";
-        this.lastname = "Bar";
+        this.counter = 0;
 
         renderTemplate(this);
     }
@@ -27,7 +27,7 @@ export class Foo extends HTMLElement {
 
     public test(ev: Event) {
         console.log(ev);
-        this.lastname = "Boo";
+        this.counter++;
     }
 
     private connectedCallback() {

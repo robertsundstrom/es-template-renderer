@@ -51,7 +51,7 @@ export class Observable<T> extends EventEmitter implements IObservable<T> {
 
     constructor(value?: T) {
         super();
-        if (value) {
+        if (typeof value !== "undefined") {
             this.currentValue = value;
         }
     }
@@ -159,12 +159,16 @@ export class Computed<T> extends EventEmitter implements IObservable<T> {
 }
 
 export const track = (obj: any) => {
-    for (const key in obj) {
+    for (const key of Object.getOwnPropertyNames(obj)) {
         if (key) {
             const value = obj[key];
-            const prop = getProperty(obj, key);
-            if (!prop) {
-                defineProperty(obj, key, value);
+            if (typeof value === "function") {
+                continue;
+            } else {
+                const prop = getProperty(obj, key);
+                if (!prop) {
+                    defineProperty(obj, key, value);
+                }
             }
         }
     }
