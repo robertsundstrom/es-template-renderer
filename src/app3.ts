@@ -21,7 +21,7 @@ export class Foo extends HTMLElement {
         renderTemplate(this);
     }
 
-    public get fullName() {
+    public get fullname() {
         return `${this.firstname} ${this.lastname}`;
     }
 
@@ -38,7 +38,7 @@ export class Foo extends HTMLElement {
         console.log("Disconnected");
     }
 
-    private attributeChanged (attr: any, oldValue: any, newValue: any) {
+    private attributeChanged(attr: any, oldValue: any, newValue: any) {
         this[attr] = newValue;
         /*
         this.__props_[attr].on("change", (newValue: any) => {
@@ -46,9 +46,5 @@ export class Foo extends HTMLElement {
             attr.value = newValue;
         });
         */
-        if ("onAttributeChanged" in this) {
-            this.onAttributeChanged(attr, oldValue, newValue);
-        }
     }
 }
-

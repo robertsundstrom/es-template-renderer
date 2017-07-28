@@ -1,5 +1,5 @@
-import { Computed, track } from "./observable";
-import { defaultBindingHandler, ITemplateContext, render as rt } from "./templating";
+import { Computed, getProperty, Observable, track } from "./observables/index";
+import { defaultBindingHandler, ITemplateContext, render } from "./templating";
 
 export const loadTemplate = (url: string) => {
     return fetch(url).then(async (response) => {
@@ -30,12 +30,26 @@ export const renderTemplate = async (component: HTMLElement) => {
 
     const temp = await loadTemplate(component.constructor.template);
     component = track(component);
-    const ctx = rt(element, temp, component, (elem2, expr, context) => {
-        const computed = createComputed(expr, context);
-        computed.on("change", (newValue) => {
-            elem2.innerHTML = newValue;
-        });
-        computed.init();
+    const ctx = render(element, temp, component, (elem2, expr, context) => {
+        /*
+        if (/^[$A-Z_][0-9A-Z_$]*$/i.test(expr)) {
+            const observable = getProperty<any>(context, expr);
+            if (observable) {
+                observable.on("change", (newValue) => {
+                    elem2.innerHTML = newValue;
+                });
+                elem2.innerHTML = observable.get();
+            }
+        } else {
+            */
+            const computed = createComputed(expr, context);
+            // Hook up changer listener that updates the placeholder
+            computed.on("change", (newValue) => {
+                elem2.innerHTML = newValue;
+            });
+            // Initialize the binding. (Evaluates the expression, finds dependencies, fires "change" event)
+            computed.init();
+        /*}*/
     });
 
     const inputs = ctx.target.getElementsByTagName("input");

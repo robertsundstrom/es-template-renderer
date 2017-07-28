@@ -1,4 +1,4 @@
-import { process } from "./templating";
+import { bind } from "./templating";
 
 const elem = document.getElementById("target");
 
@@ -8,4 +8,4 @@ const model = {
     title: "Hey!",
 };
 
-process(elem!, model);
+bind(elem!, model);
