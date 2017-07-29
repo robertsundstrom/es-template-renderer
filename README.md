@@ -1,4 +1,4 @@
-es-templating-engine
+es-template-renderer
 ==
 
 Simple and extendible templating library using the ECMAScript templating placeholders.
@@ -26,7 +26,7 @@ This is **experimental** and not a finished product.
 **index.ts:**
 
 ```ts
-import { bindTemplate } from "./templating";
+import { bind } from "./templating";
 
 const element = document.getElementById("template");
 
@@ -36,7 +36,7 @@ const model = {
     title: "Hey!",
 };
 
-bindData(element!, model);
+bind(element!, model);
 ```
 
 That will render this:
@@ -54,7 +54,7 @@ That will render this:
 Simple case extending the expression evaluator to cache the generated functions.
 
 ```ts
-import {  bindExpression, bindTemplate } from "./templating";
+import {  bindExpression, render } from "./templating";
 
 const cache: any = {};
 
@@ -76,7 +76,7 @@ const customBindingHandler = (elem: Element, expr: string, context: any) => {
     console.log("Handling expression:", expr);
 };
 
-export const myBinder = (elem: Element, data: any) => bindTemplate(elem!, data, customBindingHandler);
+export const myBinder = (elem: Element, data: any) => render(elem!, data, customBindingHandler);
 
 ```
 
