@@ -17,7 +17,7 @@ setTimeout(() => {
     const updateBinding = (elem: Element, expr: string, context: any) => {
         elem.innerHTML = defaultEvaluator(expr, context);
     };
-    for (const { elem, expr, context } of ctxt.bindings) {
+    for (const { elem, expr, context } of ctxt.placeholders) {
         // Update binding
         updateBinding(elem, expr, context.data);
     }

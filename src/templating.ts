@@ -131,27 +131,37 @@ function cloneAttributes(element: Element, sourceNode: Node) {
     }
 }
 
+/** Represents the template context. */
 export interface ITemplateContext {
-    template: Element;
+    /** The template. */
+    template: Element | string;
+    /** The target element that the template has been rendered to. */
     target: Element;
+    /** The data model to bind to. */
     data: any;
-    bindings: ITemplateBindings[];
+    /** The placeholders in this context. */
+    placeholders: ITemplatePlaceholder[];
 }
 
-export interface ITemplateBindings {
+/** Represents a placeholder. */
+export interface ITemplatePlaceholder {
+    /** The element that represents the placeholder. */
     elem: Element;
+    /** The expression replaced by the placeholder. */
     expr: string;
+    /** The template context. */
     context: ITemplateContext;
 }
 
 /** Renders a template to the DOM and binds it to some data.  */
 export const render = (
     target: Element,
-    template: Element, data: any,
+    template: Element | string,
+    data: any,
     bindingHandler: BindingHandler = defaultBindingHandler) => {
     const context: ITemplateContext = {
-        bindings: [],
         data,
+        placeholders: [],
         target,
         template,
     };
@@ -159,15 +169,20 @@ export const render = (
     let templateInstance: Element = null!;
     templateInstance = target;
     templateInstance.innerHTML = "";
-    if (template instanceof HTMLTemplateElement) {
-        const templateRoot = document.importNode(template.content, true);
+    if (typeof template === "string") {
+        const templateRoot = document.createTextNode(template);
         templateInstance.appendChild(templateRoot);
     } else {
-        const templateRoot = template.children.item(0).cloneNode(true);
-        templateInstance.appendChild(templateRoot);
+        if (template instanceof HTMLTemplateElement) {
+            const templateRoot = document.importNode(template.content, true);
+            templateInstance.appendChild(templateRoot);
+        } else {
+            const templateRoot = template.children.item(0).cloneNode(true);
+            templateInstance.appendChild(templateRoot);
+        }
     }
     const handlerWrapper = (elem: Element, expr: string, ctx: any) => {
-        context.bindings.push({
+        context.placeholders.push({
             context,
             elem,
             expr,
