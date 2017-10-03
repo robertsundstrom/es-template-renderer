@@ -15,19 +15,22 @@ const expressionRegexp = /\${([^}]*)}/g;
 
 const matchExpressions = (value: string) => value.matchAll(expressionRegexp);
 
-function* getExpressions(elem: Node): Iterable<IExpressionInfo> {
-    const nodes = processNode(elem);
-    if (nodes) {
-        for (const node of nodes) {
-            yield node;
+function getExpressions(elem: Node): IExpressionInfo[] {
+    function* getExpressions2(elem2: Node): Iterable<IExpressionInfo> {
+        const nodes = processNode(elem2);
+        if (nodes) {
+            for (const node of nodes) {
+                yield node;
+            }
+        }
+        for (const node of Array.from(elem2.childNodes)) {
+            const n2 = getExpressions(node);
+            for (const n of n2) {
+                yield n;
+            }
         }
     }
-    for (const node of Array.from(elem.childNodes)) {
-        const n2 = getExpressions(node);
-        for (const n of n2) {
-            yield n;
-        }
-    }
+    return Array.from(getExpressions2(elem));
 }
 
 interface IExpressionInfo {
@@ -111,13 +114,14 @@ export const defaultEvaluator = (expr: string, context: any) =>
     new Function("context", `with(context) { return ${expr}; }`)(context);
 
 /** Default binding handler */
-const defaultBindingHandler = (target: Element, expr: string, context: any) => {
+const defaultBindingHandler = (target: Element, expr: string, context: any) =>
     bindExpression(defaultEvaluator, target, expr, context);
-};
 
 /** Bind a DOM element to some data using a binding handler. */
-export const bind = (elem: Element, data: any, bindingHandler: BindingHandler = defaultBindingHandler) =>
-    bindExpressions(Array.from(getExpressions(elem)), data, bindingHandler);
+export const bind = (elem: Element, data: any, bindingHandler: BindingHandler = defaultBindingHandler) => {
+    const expressions = getExpressions(elem);
+    bindExpressions(expressions, data, bindingHandler);
+};
 
 function cloneAttributes(element: Element, sourceNode: Node) {
     // tslint:disable-next-line:prefer-const
@@ -167,7 +171,7 @@ export const render = (
     };
     const parent = target.parentElement!;
     let templateInstance: Element = null!;
-    templateInstance = target;
+    templateInstance = target.cloneNode() as Element;
     templateInstance.innerHTML = "";
     if (typeof template === "string") {
         const templateRoot = document.createTextNode(template);
@@ -191,8 +195,6 @@ export const render = (
     };
     const node = [];
     bind(templateInstance, data, handlerWrapper);
-    // TODO: Copy the attributes of "target" over to "templateInstance".
-    cloneAttributes(templateInstance, target);
     parent.replaceChild(templateInstance, target);
     return context;
 };
