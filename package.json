@@ -19,10 +19,9 @@
     "url": "https://github.com/robertsundstrom/es-template-renderer/issues"
   },
   "homepage": "https://github.com/robertsundstrom/es-template-renderer#readme",
-  "dependencies": {
-    "tslint": "^5.5.0"
-  },
   "devDependencies": {
+    "tslint": "^5.5.0",
+    "tslint-config-standard": "^6.0.1",
     "typescript": "^2.6.0-dev.20170930"
   }
 }
