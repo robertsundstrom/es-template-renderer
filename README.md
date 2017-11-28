@@ -16,10 +16,10 @@ This is **experimental** and not a finished product.
 **index.html:**
 
 ```html
-<div id="template">        
+<div id="template">
     <h1>${title}</h1>
     <p>${description + "!"}</p>
-    <p>${greet("John Doe")}</p>
+    <p>${greet("John Doe")} ${2017}</p>
 </div>
 ```
 
@@ -43,9 +43,9 @@ That will render this:
 
 ```html
 <div id="template">
-    <h1><span>Hey!</span></h1>
-    <p><span>Whats up!</span></p>
-    <p><span>Hello, John Doe!</span></p>
+    <h1>Hey!</h1>
+    <p>Whats up!</p>
+    <p><span>Hello, John Doe!</span> <span>2017</span></p>
 </div>
 ```
 
@@ -79,6 +79,17 @@ const customBindingHandler = (elem: Element, expr: string, context: any) => {
 export const myBinder = (elem: Element, data: any) => render(elem!, data, customBindingHandler);
 
 ```
+
+## Build
+Requires Bower.
+
+```sh
+$ npm install
+$ bower install
+$ npm run build
+```
+
+Open index.html/index2.html.
 
 ## TODO
 * Write tests
