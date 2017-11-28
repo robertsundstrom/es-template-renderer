@@ -1,9 +1,11 @@
 es-template-renderer
 ==
 
-Simple and extendible templating library using the ECMAScript templating placeholders.
+Simple and extendible templating library using the ECMAScript interpolation syntax.
 
-This library is written in TypeScript, but should be able to target any version of JavaScript and browser environments that supports the features being used.
+This library is written in TypeScript, but should be able to target any version of JavaScript and any browser environment that support the features being used.
+
+Targeting the AMD module format.
 
 This is **experimental** and not a finished product.
 
