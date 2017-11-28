@@ -1,3 +1,3 @@
 interface String {
-    matchAll(regexp: RegExp): RegExpMatchArray[] | null;
+  matchAll(regexp: RegExp): RegExpMatchArray[] | null;
 }

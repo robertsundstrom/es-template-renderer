@@ -23,5 +23,8 @@
     "save-dev": "^2.0.0",
     "tslint": "^5.5.0",
     "typescript": "^2.5.0-dev.20170719"
+  },
+  "devDependencies": {
+    "tslint-config-standard": "^7.0.0"
   }
 }
