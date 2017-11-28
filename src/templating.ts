@@ -179,7 +179,7 @@ export const render = (
   }
   const parent = target.parentElement!
   let templateInstance: Element = null!
-  templateInstance = target
+  templateInstance = document.createElement('div')
   templateInstance.innerHTML = ''
   if (typeof template === 'string') {
     const templateRoot = document.createTextNode(template)

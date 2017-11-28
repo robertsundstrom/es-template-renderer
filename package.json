@@ -2,7 +2,7 @@
   "name": "es-template-renderer",
   "version": "1.0.0",
   "description": "es-template-renderer",
-  "main": "build/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "dev:watch": "tsc --watch",
@@ -26,5 +26,8 @@
   },
   "devDependencies": {
     "tslint-config-standard": "^7.0.0"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }
