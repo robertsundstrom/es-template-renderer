@@ -1,4 +1,4 @@
-import { bind, bindExpression } from './templating'
+import { bind, bindExpression } from '../index'
 
 const cache: any = {}
 

@@ -1,8 +1,9 @@
 {
   "name": "es-template-renderer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "es-template-renderer",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "dev:watch": "tsc --watch",
@@ -14,17 +15,14 @@
     "url": "git+https://github.com/robertsundstrom/es-template-renderer.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/robertsundstrom/es-template-renderer/issues"
   },
   "homepage": "https://github.com/robertsundstrom/es-template-renderer#readme",
-  "dependencies": {
-    "save-dev": "^2.0.0",
-    "tslint": "^5.5.0",
-    "typescript": "^2.5.0-dev.20170719"
-  },
   "devDependencies": {
+    "tslint": "^5.5.0",
+    "typescript": "^2.5.0-dev.20170719",
     "tslint-config-standard": "^7.0.0"
   },
   "files": [

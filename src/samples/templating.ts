@@ -1,4 +1,4 @@
-import { bind } from './templating'
+import { bind } from '../index'
 
 const elem = document.getElementById('target')
 

@@ -32,7 +32,7 @@ export function getExpressions (elem: Node): IExpressionInfo[] {
   return result
 }
 
-interface IExpressionInfo {
+export interface IExpressionInfo {
   expr: any
   node: Element
 }

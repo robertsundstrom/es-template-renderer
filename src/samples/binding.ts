@@ -1,4 +1,4 @@
-import { defaultEvaluator, render } from './templating'
+import { defaultEvaluator, render } from '../index'
 
 const template = document.getElementById('template')
 const target = document.getElementById('target')
